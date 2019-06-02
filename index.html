@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <v-app>
+        <v-content>
+          <!-- Toolbar -->
+          <v-toolbar>
+            <v-toolbar-title>Foam Calculator </v-toolbar-title>
+          </v-toolbar>
+          <v-container>
+            <v-layout align-center justify-center row>
+              <v-flex xs12 md6>
+                <v-text-field
+                  label="Diameter (m)"
+                  type="number"
+                  min="0"
+                  v-model="diameter"
+                  outline
+                ></v-text-field>
+
+                <v-select
+                  :items="concentrate"
+                  label="Foam Concentrate Percentage (%)"
+                  v-model="foamConPercentage"
+                  outline
+                ></v-select>
+
+                <v-content class="body-1">
+                  Application Rate = {{ appRate }} LPM
+                  <br />
+                  <br />
+                  Area
+                  <br />
+                  π x {{ diameter / 2 }} ^ 2 m = {{ area }} m2
+                  <br />
+                  <br />
+                  Water/Foam Solution Rate
+                  <br />
+                  {{ area }} m2 x {{ appRate }} LPM = {{ foamSolRate }} LPM
+                  <br />
+                  <br />
+                  Foam Concentrate Rate
+                  <br />
+                  {{ foamSolRate }} LPM x {{ foamConPercentage / 100 }} =
+                  {{ foamConRate }} LPM
+                  <br />
+                  <br />
+                  Foam Concentrate Required
+                  <br />
+                  {{ foamConRate }} LPM * 65 min = {{ foamCon }} L
+                </v-content>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-content>
+      </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+    <script>
+      let appRates = {
+        46: 6.51,
+        61: 7.32,
+        76: 8.13,
+        91: 8.95,
+        92: 10.17
+      };
+
+      new Vue({
+        el: "#app",
+        data() {
+          return {
+            diameter: 80,
+            concentrate: [3, 6],
+            foamConPercentage: 3
+          };
+        },
+        computed: {
+          area() {
+            return Math.PI * Math.pow(this.diameter / 2, 2);
+          },
+          appRate() {
+            for (let d in appRates) {
+              if (this.diameter >= 92) {
+                return appRates[92];
+              } else if (this.diameter <= d) {
+                return appRates[d];
+              }
+            }
+          },
+          foamSolRate() {
+            return this.area * this.appRate;
+          },
+          foamConRate() {
+            return this.foamSolRate * (this.foamConPercentage / 100);
+          },
+          foamCon() {
+            return this.foamConRate * 65;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
