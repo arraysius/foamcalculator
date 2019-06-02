@@ -94,25 +94,25 @@
         },
         computed: {
           area() {
-            return Math.PI * Math.pow(this.diameter / 2, 2);
+            return Math.PI * Math.pow(+this.diameter / 2, 2);
           },
           appRate() {
             for (let d in appRates) {
-              if (this.diameter >= 92) {
+              if (+this.diameter >= 92) {
                 return appRates[92];
-              } else if (this.diameter <= d) {
+              } else if (+this.diameter <= d) {
                 return appRates[d];
               }
             }
           },
           foamSolRate() {
-            return this.area * this.appRate;
+            return +this.area * +this.appRate;
           },
           foamConRate() {
-            return this.foamSolRate * (this.foamConPercentage / 100);
+            return +this.foamSolRate * (+this.foamConPercentage / 100);
           },
           foamCon() {
-            return this.foamConRate * 65;
+            return +this.foamConRate * 65;
           }
         }
       });
